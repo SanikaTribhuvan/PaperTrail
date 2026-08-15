@@ -1,16 +1,36 @@
-# React + Vite
+# PaperTrail
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**Chain-of-Custody Audit Protocol for Tamper-Evident Government Document Tracking**
 
-Currently, two official plugins are available:
+Built for the Smart Kopargaon Hackathon 2026 — Problem Statement SKH020, *Smart Digital Documentation System for Government Offices*.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## The Problem
 
-## React Compiler
+Three government exams were compromised in a single 2026 testing season, each a different failure point: a pre-circulated NEET-UG paper, a Maharashtra TET printing-press breach, a leaked UGC-NET PDF. Different attack vectors, one shared root cause — once a document leaves its point of creation, nobody can prove whether it's still the original.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What It Does
 
-## Expanding the Oxlint configuration
+PaperTrail seals every document with a SHA-256 cryptographic fingerprint at creation, then re-checks that fingerprint at every handoff (printing, transit, storage, distribution). A hash mismatch instantly names the exact checkpoint where a document was altered and who held it at the time — no blockchain, no new infrastructure, just a hash chain running on hardware departments already have.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Tech Stack
+
+React · Tailwind CSS · Vite · native Web Crypto API (SHA-256) · qrcode.react · html5-qrcode · localStorage
+
+## Running Locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Documentation
+
+Full 8-page technical documentation: [`/docs/PaperTrail_Documentation.pdf`](./docs/PaperTrail_Documentation.pdf)
+
+## Demo Video
+
+*(add YouTube link here once uploaded)*
+
+## Team
+
+**PaperTrail** · Team ID `56EGZG` · Smart Kopargaon Hackathon 2026
