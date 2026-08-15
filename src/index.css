@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #FBF8F1;
+  --color-navy: #0B2545;
+  --color-amber: #E9B44C;
+  --color-teal: #00A896;
+  --color-sealed: #3B82F6;
+  --color-verified: #10B981;
+  --color-tampered: #EF4444;
+  --color-ink: #000000;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --shadow-brutal-sm: 3px 3px 0px 0px #000;
+  --shadow-brutal: 4px 4px 0px 0px #000;
+  --shadow-brutal-lg: 8px 8px 0px 0px #000;
+  --shadow-brutal-amber: 4px 4px 0px 0px #E9B44C;
+  --shadow-brutal-navy: 4px 4px 0px 0px #0B2545;
+}
+
+/* Neo-Brutalist base styles */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-cream);
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-navy);
+  border: 2px solid var(--color-cream);
+}
+
+/* Custom utility classes */
+.brutal-border {
+  border: 2.5px solid #000;
+}
+
+.brutal-border-thick {
+  border: 3.5px solid #000;
+}
+
+.brutal-card {
+  border: 2.5px solid #000;
+  box-shadow: 4px 4px 0px 0px #000;
+  background: white;
+  transition: all 0.15s ease;
+}
+
+.brutal-card:hover {
+  box-shadow: 6px 6px 0px 0px #000;
+  transform: translate(-1px, -1px);
+}
+
+.brutal-card-static {
+  border: 2.5px solid #000;
+  box-shadow: 4px 4px 0px 0px #000;
+  background: white;
+}
+
+.brutal-btn {
+  border: 2.5px solid #000;
+  box-shadow: 4px 4px 0px 0px #000;
+  font-weight: 700;
+  transition: all 0.1s ease;
+  cursor: pointer;
+}
+
+.brutal-btn:hover {
+  box-shadow: 5px 5px 0px 0px #000;
+  transform: translate(-0.5px, -0.5px);
+}
+
+.brutal-btn:active {
+  box-shadow: 0px 0px 0px 0px #000;
+  transform: translate(4px, 4px);
+}
+
+.brutal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: 4px 4px 0px 0px #000;
+  transform: none;
+}
+
+.brutal-input {
+  border: 2.5px solid #000;
+  box-shadow: 3px 3px 0px 0px #000;
+  outline: none;
+  transition: all 0.15s ease;
+  font-family: var(--font-sans);
+}
+
+.brutal-input:focus {
+  box-shadow: 5px 5px 0px 0px var(--color-navy);
+  border-color: var(--color-navy);
+}
+
+/* Tilted badge */
+.tilted-badge {
+  display: inline-block;
+  transform: rotate(-1.5deg);
+  border: 3px solid #000;
+  box-shadow: 6px 6px 0px 0px #000;
+}
+
+/* Strobe animation for tamper detection */
+@keyframes tamper-strobe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.tamper-strobe {
+  animation: tamper-strobe 1s ease-in-out infinite;
+}
+
+/* Pulse for scanning */
+@keyframes scan-pulse {
+  0%, 100% { border-color: var(--color-teal); opacity: 1; }
+  50% { border-color: var(--color-amber); opacity: 0.6; }
+}
+
+.scan-pulse {
+  animation: scan-pulse 2s ease-in-out infinite;
+}
+
+/* Timeline connector lines */
+.timeline-connector {
+  position: relative;
+}
+
+.timeline-connector::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 60px;
+  bottom: -20px;
+  width: 3px;
+  background: #000;
+}
+
+.timeline-connector:last-child::before {
+  display: none;
+}
+
+/* Hash reveal animation */
+@keyframes hash-reveal {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hash-reveal {
+  animation: hash-reveal 0.4s ease-out;
+}
+
+/* News ticker */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.ticker-scroll {
+  animation: ticker-scroll 30s linear infinite;
+}
+
+.ticker-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Status badge glow */
+.glow-verified {
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.glow-tampered {
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+.glow-sealed {
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
