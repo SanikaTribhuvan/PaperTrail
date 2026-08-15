@@ -1,36 +1,22 @@
 # PaperTrail
 
-**Chain-of-Custody Audit Protocol for Tamper-Evident Government Document Tracking**
+Cryptographic chain-of-custody system for government documents, exam papers, land mutation records, and government tenders. Built for the Smart Kopargaon Hackathon.
 
-Built for the Smart Kopargaon Hackathon 2026 — Problem Statement SKH020, *Smart Digital Documentation System for Government Offices*.
+## The problem
+Once a government document leaves official hands, there's no reliable way to prove who touched it, when, or whether it was altered. Exam leaks, land record fraud, and tender manipulation all trace back to the same gap: no tamper-evident trail.
 
-## The Problem
+## How it works
+Every document gets a SHA-256 hash on registration. Every handoff, scanned by QR or entered manually, is logged as a checkpoint. Matching content verifies clean. One changed character breaks the hash and flags a tamper instantly, with a side-by-side comparison of exactly what changed.
 
-Three government exams were compromised in a single 2026 testing season, each a different failure point: a pre-circulated NEET-UG paper, a Maharashtra TET printing-press breach, a leaked UGC-NET PDF. Different attack vectors, one shared root cause — once a document leaves its point of creation, nobody can prove whether it's still the original.
+## Tech stack
+React, Tailwind CSS, Web Crypto API (SHA-256), localStorage, QR-based verification
 
-## What It Does
-
-PaperTrail seals every document with a SHA-256 cryptographic fingerprint at creation, then re-checks that fingerprint at every handoff (printing, transit, storage, distribution). A hash mismatch instantly names the exact checkpoint where a document was altered and who held it at the time — no blockchain, no new infrastructure, just a hash chain running on hardware departments already have.
-
-## Tech Stack
-
-React · Tailwind CSS · Vite · native Web Crypto API (SHA-256) · qrcode.react · html5-qrcode · localStorage
-
-## Running Locally
-
-```bash
+## Run it locally
 npm install
 npm run dev
-```
 
 ## Documentation
+Full write-up: PaperTrail_Documentation.pdf
 
-Full 8-page technical documentation: [`/docs/PaperTrail_Documentation.pdf`](./docs/PaperTrail_Documentation.pdf)
-
-## Demo Video
-
-*(add YouTube link here once uploaded)*
-
-## Team
-
-**PaperTrail** · Team ID `56EGZG` · Smart Kopargaon Hackathon 2026
+---
+Smart Kopargaon Hackathon — Round 2
