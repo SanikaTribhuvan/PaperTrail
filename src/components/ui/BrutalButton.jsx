@@ -6,6 +6,8 @@ export default function BrutalButton({ children, variant = 'primary', className 
     danger: 'bg-tampered text-white hover:bg-tampered/90',
     ghost: 'bg-white text-navy hover:bg-cream',
     outline: 'bg-cream text-navy hover:bg-white',
+    highlighter: 'bg-highlighter text-ink hover:bg-highlighter/90',
+    magenta: 'bg-magenta text-white hover:bg-magenta/90',
   };
 
   return (

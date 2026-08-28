@@ -10,8 +10,15 @@
   --color-tampered: #EF4444;
   --color-ink: #000000;
 
+  /* Marketing shell tokens — §2b */
+  --color-highlighter: #F1FC47;
+  --color-magenta: #AB0992;
+  --color-indigo: #0900E8;
+
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-impact: "Anton", "Bebas Neue", "Space Grotesk", sans-serif;
 
   --shadow-brutal-sm: 3px 3px 0px 0px #000;
   --shadow-brutal: 4px 4px 0px 0px #000;
@@ -188,4 +195,112 @@ body {
 
 .glow-sealed {
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+/* ========================================================================
+   MARKETING SHELL STYLES — §2b–§2d
+   New styles for the marketing site only. Demo keeps its own styles above.
+   ======================================================================== */
+
+/* Marketing display headings */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+
+.font-impact {
+  font-family: var(--font-impact);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+}
+
+/* Scroll reveal animation — separate from .hash-reveal */
+@keyframes scroll-reveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.scroll-reveal {
+  animation: scroll-reveal 0.4s ease-out both;
+}
+
+/* Hazard tape animation for 404 page */
+@keyframes tape-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.tape-scroll {
+  animation: tape-scroll 12s linear infinite;
+}
+
+/* Rotating badge */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* Marketing pill badge — rounded variant */
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 2.5px solid #000;
+  box-shadow: 3px 3px 0px 0px #000;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+/* Focus state for keyboard accessibility — §11 */
+.focus-brutal:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+/* Tamper pulse for the custody path illustration */
+@keyframes tamper-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+}
+
+.tamper-pulse {
+  animation: tamper-pulse 2s ease-in-out infinite;
+}
+
+/* Prefers reduced motion — §2d, §11 */
+@media (prefers-reduced-motion: reduce) {
+  .ticker-scroll {
+    animation: none !important;
+  }
+  .tape-scroll {
+    animation: none !important;
+  }
+  .scroll-reveal {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .spin-slow {
+    animation: none !important;
+  }
+  .tamper-pulse {
+    animation: none !important;
+  }
+  .tamper-strobe {
+    animation: none !important;
+  }
+  .scan-pulse {
+    animation: none !important;
+  }
 }

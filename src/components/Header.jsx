@@ -1,4 +1,5 @@
-import { Fingerprint, Zap, RotateCcw, FileText, ShieldAlert, Link2, Search } from 'lucide-react';
+import { Fingerprint, Zap, RotateCcw, FileText, ShieldAlert, Link2, Search, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import BrutalButton from './ui/BrutalButton';
 
 export default function Header({ stats, onLoadSample, onResetAll, searchQuery, onSearchChange }) {
@@ -8,6 +9,14 @@ export default function Header({ stats, onLoadSample, onResetAll, searchQuery, o
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
         {/* Brand Block */}
         <div className="flex items-center gap-4">
+          <Link to="/" className="hidden md:inline-flex">
+            <BrutalButton variant="ghost" className="text-xs">
+              <span className="flex items-center gap-1.5">
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Back to site
+              </span>
+            </BrutalButton>
+          </Link>
           <div className="tilted-badge bg-amber px-5 py-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-navy brutal-border flex items-center justify-center">
