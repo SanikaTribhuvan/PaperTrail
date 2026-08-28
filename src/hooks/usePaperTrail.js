@@ -2,12 +2,15 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { generateSHA256, generateDocId, generateCheckpointId } from '../utils/crypto';
 import { loadDocuments, saveDocuments, loadCheckpoints, saveCheckpoints, clearAllData } from '../utils/storage';
 import { generateSampleData } from '../utils/sampleData';
+import { sendTamperAlert } from '../utils/emailAlert';
 
 export function usePaperTrail() {
   const [documents, setDocuments] = useState(() => loadDocuments());
   const [checkpoints, setCheckpoints] = useState(() => loadCheckpoints());
   const checkpointsRef = useRef(checkpoints);
   checkpointsRef.current = checkpoints;
+  const documentsRef = useRef(documents);
+  documentsRef.current = documents;
   const [activeDocId, setActiveDocId] = useState(null);
   const [currentView, setCurrentView] = useState('dashboard'); // dashboard | register | checkpoint | timeline
   const [lastResult, setLastResult] = useState(null); // stores last checkpoint result for UI feedback
@@ -23,7 +26,7 @@ export function usePaperTrail() {
   }, [checkpoints]);
 
   // Create a new document with its genesis checkpoint
-  const createDocument = useCallback(async (title, category, content, custodianName, custodianRole) => {
+  const createDocument = useCallback(async (title, category, content, custodianName, custodianRole, authorityEmail) => {
     const hash = await generateSHA256(content);
     const docId = generateDocId();
     const now = new Date().toISOString();
@@ -36,6 +39,7 @@ export function usePaperTrail() {
       initialHash: hash,
       currentStatus: 'sealed',
       totalCheckpoints: 1,
+      authorityEmail: authorityEmail || '',
     };
 
     const checkpoint = {
@@ -97,6 +101,23 @@ export function usePaperTrail() {
         expectedHash: previousHash,
         receivedHash: hash,
       };
+
+      // Fire tamper alert email asynchronously
+      const doc = documentsRef.current.find(d => d.id === documentId);
+      if (doc?.authorityEmail) {
+        sendTamperAlert({
+          authorityEmail: doc.authorityEmail,
+          documentTitle:  doc.title,
+          documentId:     doc.id,
+          custodianName:  custodianName || 'Unspecified',
+          stageName,
+          expectedHash:   previousHash,
+          receivedHash:   hash,
+          timestamp:      checkpoint.timestamp,
+        }).then(result => {
+          checkpoint.emailAlert = result;
+        });
+      }
     }
 
     setCheckpoints(prev => [...prev, checkpoint]);

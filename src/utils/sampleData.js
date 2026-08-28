@@ -19,6 +19,7 @@ export async function generateSampleData() {
     initialHash: examHash,
     currentStatus: 'verified',
     totalCheckpoints: 3,
+    authorityEmail: 'mpsc-exam-cell@gov.in',
   };
 
   const examCheckpoints = [
@@ -74,6 +75,7 @@ export async function generateSampleData() {
     initialHash: landHashOriginal,
     currentStatus: 'tampered',
     totalCheckpoints: 3,
+    authorityEmail: 'collector-pune@revenue.gov.in',
   };
 
   const landCheckpoints = [

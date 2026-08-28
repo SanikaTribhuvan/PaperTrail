@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { ScanLine, Keyboard, ShieldCheck, ShieldAlert, ChevronDown, Plus } from 'lucide-react';
+import { ScanLine, Keyboard, ShieldCheck, ShieldAlert, ChevronDown, Plus, Mail } from 'lucide-react';
 import SectionHeader from './ui/SectionHeader';
 import BrutalButton from './ui/BrutalButton';
 import StatusBadge from './ui/StatusBadge';
@@ -135,6 +135,33 @@ export default function CheckpointStation({ documents, onLogCheckpoint, getDocum
                   </div>
                 </div>
               </div>
+
+              {/* Email dispatch badge */}
+              {(() => {
+                const doc = documents.find(d => d.id === result.documentId);
+                return doc?.authorityEmail ? (
+                  <div className="mt-4 bg-amber/10 brutal-border border-amber! p-3 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-amber/20 brutal-border flex items-center justify-center shrink-0">
+                      <Mail className="w-4 h-4 text-amber" />
+                    </div>
+                    <div>
+                      <div className="font-mono text-[10px] text-navy/50 uppercase tracking-wider">
+                        📧 Tamper Alert Dispatched
+                      </div>
+                      <div className="text-sm font-bold text-navy">
+                        Notification sent to <span className="text-amber">{doc.authorityEmail}</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-4 bg-navy/5 brutal-border p-3 flex items-center gap-3">
+                    <Mail className="w-4 h-4 text-navy/30" />
+                    <div className="text-xs text-navy/40">
+                      No authority email registered — alert not dispatched.
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
 

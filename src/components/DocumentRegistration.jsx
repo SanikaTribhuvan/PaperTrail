@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FilePlus, FileCheck, Fingerprint } from 'lucide-react';
+import { FilePlus, FileCheck, Fingerprint, Mail } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import SectionHeader from './ui/SectionHeader';
 import BrutalButton from './ui/BrutalButton';
@@ -18,6 +18,7 @@ export default function DocumentRegistration({ onCreateDocument }) {
   const [category, setCategory] = useState('EXAM_PAPER');
   const [custodianName, setCustodianName] = useState('');
   const [custodianRole, setCustodianRole] = useState('');
+  const [authorityEmail, setAuthorityEmail] = useState('');
   const [content, setContent] = useState('');
   const [liveHash, setLiveHash] = useState('');
   const [isHashing, setIsHashing] = useState(false);
@@ -39,16 +40,17 @@ export default function DocumentRegistration({ onCreateDocument }) {
   const handleSubmit = useCallback(async () => {
     if (!title.trim() || !content.trim()) return;
     setIsHashing(true);
-    const result = await onCreateDocument(title, category, content, custodianName, custodianRole);
+    const result = await onCreateDocument(title, category, content, custodianName, custodianRole, authorityEmail);
     setCreatedDoc(result);
     setIsHashing(false);
-  }, [title, category, content, custodianName, custodianRole, onCreateDocument]);
+  }, [title, category, content, custodianName, custodianRole, authorityEmail, onCreateDocument]);
 
   const handleReset = () => {
     setTitle('');
     setCategory('EXAM_PAPER');
     setCustodianName('');
     setCustodianRole('');
+    setAuthorityEmail('');
     setContent('');
     setLiveHash('');
     setCreatedDoc(null);
@@ -191,6 +193,26 @@ export default function DocumentRegistration({ onCreateDocument }) {
                 className="brutal-input w-full px-3 py-2.5 text-sm"
               />
             </div>
+          </div>
+
+          {/* Authority Email */}
+          <div className="mb-4">
+            <label className="font-mono text-[10px] text-navy/50 uppercase tracking-wider block mb-1.5">
+              Authority / Owner Email
+            </label>
+            <div className="flex items-center gap-2">
+              <Mail className="w-4 h-4 text-navy/40 shrink-0" />
+              <input
+                type="email"
+                value={authorityEmail}
+                onChange={(e) => setAuthorityEmail(e.target.value)}
+                placeholder="authority@gov.in — tamper alerts sent here"
+                className="brutal-input w-full px-3 py-2.5 text-sm"
+              />
+            </div>
+            <p className="text-[10px] text-navy/40 mt-1 ml-6">
+              📧 An automated email alert will be dispatched to this address if tampering is detected.
+            </p>
           </div>
 
           {/* Content */}
