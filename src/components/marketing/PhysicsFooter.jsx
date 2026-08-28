@@ -1,48 +1,44 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, ArrowRight } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Mail } from 'lucide-react';
 
 // Balloon / Coin definitions matching MoMoney inspo colors, currency & protocol glyphs
 const COIN_DEFINITIONS = [
-  { symbol: '$', bg: '#00E676', border: '#000000', ring: '#000000', color: '#000000', size: 72 },
-  { symbol: '£', bg: '#E056FD', border: '#000000', ring: '#000000', color: '#000000', size: 66 },
-  { symbol: '₽', bg: '#FF6B00', border: '#000000', ring: '#000000', color: '#000000', size: 68 },
-  { symbol: '€', bg: '#F1FC47', border: '#000000', ring: '#000000', color: '#000000', size: 64 },
-  { symbol: '¥', bg: '#4834D4', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 68 },
-  { symbol: '₿', bg: '#EF4444', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 74 },
-  { symbol: '₹', bg: '#E9B44C', border: '#000000', ring: '#000000', color: '#000000', size: 70 },
-  { symbol: '🔒', bg: '#AB0992', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 62 },
-  { symbol: '✓', bg: '#10B981', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 68 },
-  { symbol: '⛓', bg: '#FF5722', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 64 },
-  { symbol: 'QR', bg: '#F1FC47', border: '#000000', ring: '#000000', color: '#000000', size: 62 },
-  { symbol: '#', bg: '#00A896', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 70 },
-  { symbol: 'DOC', bg: '#F1FC47', border: '#000000', ring: '#000000', color: '#000000', size: 60 },
-  { symbol: 'SHA', bg: '#0900E8', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 66 },
-  { symbol: '$', bg: '#10B981', border: '#000000', ring: '#000000', color: '#000000', size: 70 },
-  { symbol: '£', bg: '#AB0992', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 68 },
-  { symbol: '€', bg: '#F1FC47', border: '#000000', ring: '#000000', color: '#000000', size: 64 },
-  { symbol: '₹', bg: '#FF6B00', border: '#000000', ring: '#000000', color: '#000000', size: 68 },
-  { symbol: '₿', bg: '#EF4444', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 72 },
-  { symbol: '✓', bg: '#00E676', border: '#000000', ring: '#000000', color: '#000000', size: 66 },
+  { symbol: '$', bg: '#00E676', border: '#000000', ring: '#000000', color: '#000000', size: 68 },
+  { symbol: '£', bg: '#E056FD', border: '#000000', ring: '#000000', color: '#000000', size: 64 },
+  { symbol: '₽', bg: '#FF6B00', border: '#000000', ring: '#000000', color: '#000000', size: 66 },
+  { symbol: '€', bg: '#F1FC47', border: '#000000', ring: '#000000', color: '#000000', size: 62 },
+  { symbol: '¥', bg: '#4834D4', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 66 },
+  { symbol: '₿', bg: '#EF4444', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 70 },
+  { symbol: '₹', bg: '#E9B44C', border: '#000000', ring: '#000000', color: '#000000', size: 68 },
+  { symbol: '🔒', bg: '#AB0992', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 60 },
+  { symbol: '✓', bg: '#10B981', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 66 },
+  { symbol: '⛓', bg: '#FF5722', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 62 },
+  { symbol: 'QR', bg: '#F1FC47', border: '#000000', ring: '#000000', color: '#000000', size: 60 },
+  { symbol: '#', bg: '#00A896', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 68 },
+  { symbol: 'DOC', bg: '#F1FC47', border: '#000000', ring: '#000000', color: '#000000', size: 58 },
+  { symbol: 'SHA', bg: '#0900E8', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 64 },
+  { symbol: '$', bg: '#10B981', border: '#000000', ring: '#000000', color: '#000000', size: 68 },
+  { symbol: '£', bg: '#AB0992', border: '#000000', ring: '#000000', color: '#FFFFFF', size: 66 },
 ];
 
 export default function PhysicsFooter() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const engineRef = useRef(null);
-  const renderRef = useRef(null);
   const mousePosRef = useRef({ x: -1000, y: -1000, active: false });
   const [emailInput, setEmailInput] = useState('');
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
     setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, []);
 
-  // Track mouse position over the entire contact page for balloon repulsion
   const handleMouseMove = useCallback((e) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -56,6 +52,27 @@ export default function PhysicsFooter() {
   const handleMouseLeave = useCallback(() => {
     mousePosRef.current = { x: -1000, y: -1000, active: false };
   }, []);
+
+  // Explicit button click handlers
+  const handleNavClick = (target) => {
+    if (target === 'exhibits') {
+      if (location.pathname === '/') {
+        const el = document.getElementById('checkpoints') || document.getElementById('crisis');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        navigate('/', { state: { scrollTo: 'checkpoints' } });
+      }
+    } else if (target === 'contact') {
+      const el = document.getElementById('contact');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else if (target === 'protocol') {
+      navigate('/how-it-works');
+      window.scrollTo(0, 0);
+    } else if (target === 'demo') {
+      navigate('/demo');
+      window.scrollTo(0, 0);
+    }
+  };
 
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
@@ -71,10 +88,10 @@ export default function PhysicsFooter() {
         if (!container) return;
 
         const width = container.clientWidth || 1200;
-        const height = Math.max(container.clientHeight || 850, isMobile ? 750 : 900);
+        const height = container.clientHeight || 560;
 
         const engine = Engine.create({
-          gravity: { x: 0, y: reducedMotion ? 0 : 0.4 },
+          gravity: { x: 0, y: reducedMotion ? 0 : 0.35 },
         });
         engineRef.current = engine;
 
@@ -89,22 +106,18 @@ export default function PhysicsFooter() {
             pixelRatio: Math.min(window.devicePixelRatio, 2),
           },
         });
-        renderRef.current = render;
 
-        // Boundaries / Walls encompassing the full contact page
-        const wallThickness = 100;
+        // Walls
+        const wallThickness = 80;
         const walls = [
-          // Bottom floor
-          Bodies.rectangle(width / 2, height + wallThickness / 2 - 40, width + 400, wallThickness, {
+          Bodies.rectangle(width / 2, height + wallThickness / 2 - 10, width + 400, wallThickness, {
             isStatic: true,
             render: { visible: false },
           }),
-          // Left wall
           Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 2, {
             isStatic: true,
             render: { visible: false },
           }),
-          // Right wall
           Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 2, {
             isStatic: true,
             render: { visible: false },
@@ -112,22 +125,21 @@ export default function PhysicsFooter() {
         ];
 
         // Balloon / Coin bodies
-        const count = isMobile ? 12 : COIN_DEFINITIONS.length;
+        const count = isMobile ? 10 : COIN_DEFINITIONS.length;
         const coins = COIN_DEFINITIONS.slice(0, count);
         const scaleFactor = isMobile ? 0.72 : 1;
 
         const coinBodies = coins.map((coin, i) => {
           const radius = coin.size * scaleFactor;
-          const x = (width / (count + 1)) * (i + 1) + (Math.random() - 0.5) * 80;
-          // Spawn above screen so they cascade down like helium balloons into the contact page
+          const x = (width / (count + 1)) * (i + 1) + (Math.random() - 0.5) * 60;
           const y = reducedMotion
-            ? height - radius - 100 - Math.random() * 200
-            : -120 - i * 55 - Math.random() * 200;
+            ? height - radius - 50 - Math.random() * 120
+            : -100 - i * 40 - Math.random() * 150;
 
           return Bodies.circle(x, y, radius, {
-            restitution: 0.78, // Bouncy like real helium balloons
+            restitution: 0.78,
             friction: 0.08,
-            frictionAir: 0.015, // Float gently through air
+            frictionAir: 0.015,
             density: 0.001,
             render: {
               fillStyle: coin.bg,
@@ -139,7 +151,7 @@ export default function PhysicsFooter() {
 
         Composite.add(engine.world, [...walls, ...coinBodies]);
 
-        // Mouse drag and throw constraint
+        // Mouse drag constraint
         if (!reducedMotion) {
           const mouse = Mouse.create(render.canvas);
           const mouseConstraint = MouseConstraint.create(engine, {
@@ -152,19 +164,18 @@ export default function PhysicsFooter() {
           Composite.add(engine.world, mouseConstraint);
           render.mouse = mouse;
 
-          // Prevent mouse scroll hijacking
           mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
           mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
         }
 
-        // Mouse hover repulsion ("move away as if theyre real balloons")
+        // Mouse hover repulsion
         Events.on(engine, 'beforeUpdate', () => {
           if (reducedMotion) return;
           const { x: mx, y: my, active } = mousePosRef.current;
           if (!active || mx < 0 || my < 0) return;
 
-          const repulsionRadius = isMobile ? 140 : 200;
-          const maxForce = isMobile ? 0.06 : 0.11;
+          const repulsionRadius = isMobile ? 130 : 180;
+          const maxForce = isMobile ? 0.05 : 0.09;
 
           coinBodies.forEach((body) => {
             const dx = body.position.x - mx;
@@ -192,11 +203,11 @@ export default function PhysicsFooter() {
             ctx.translate(body.position.x, body.position.y);
             ctx.rotate(body.angle);
 
-            // Outer drop shadow on balloon coin
+            // Shadow
             ctx.shadowColor = 'rgba(0,0,0,0.65)';
             ctx.shadowBlur = 10;
-            ctx.shadowOffsetX = 4;
-            ctx.shadowOffsetY = 5;
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = 4;
 
             // Outer Circle
             ctx.beginPath();
@@ -210,23 +221,23 @@ export default function PhysicsFooter() {
             ctx.strokeStyle = coin.border;
             ctx.stroke();
 
-            // Inner concentric rim circle
+            // Inner rim circle
             ctx.beginPath();
             ctx.arc(0, 0, radius * 0.8, 0, Math.PI * 2);
             ctx.lineWidth = 2.5;
             ctx.strokeStyle = coin.ring;
             ctx.stroke();
 
-            // Highlight shine reflection arc on top edge
+            // Reflection shine
             ctx.beginPath();
             ctx.arc(0, 0, radius * 0.72, -Math.PI * 0.75, -Math.PI * 0.25);
             ctx.lineWidth = 2.5;
             ctx.strokeStyle = 'rgba(255,255,255,0.45)';
             ctx.stroke();
 
-            // Center Symbol (Currency / Protocol Glyph)
+            // Symbol
             ctx.fillStyle = coin.color;
-            ctx.font = `900 ${isMobile ? 24 : 32}px "Anton", "Space Grotesk", sans-serif`;
+            ctx.font = `900 ${isMobile ? 22 : 30}px "Anton", "Space Grotesk", sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(coin.symbol, 0, 1);
@@ -272,41 +283,42 @@ export default function PhysicsFooter() {
     <footer
       id="contact"
       ref={containerRef}
-      className="bg-[#0B0B0B] text-white relative overflow-hidden pt-12 md:pt-16 pb-10 border-t-[4px] border-black select-none min-h-[780px] md:min-h-[920px] flex flex-col justify-between"
+      className="bg-[#0B0B0B] text-white relative overflow-hidden pt-10 md:pt-14 pb-6 border-t-[4px] border-black select-none"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Full-bleed physics canvas spanning the entire contact page */}
+      {/* Background Physics canvas */}
       <div
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full z-10 cursor-grab active:cursor-grabbing pointer-events-auto"
+        className="absolute inset-0 w-full h-full z-0 pointer-events-auto cursor-grab active:cursor-grabbing"
       />
 
-      {/* Top Main Navigation & Contact Grid matching MoMoney UI — overlaid on top */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full mb-8 pointer-events-none">
+      {/* Top Main Navigation & Contact Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full mb-6 pointer-events-none">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
           {/* Left Column: Giant Condensed Typography Menu */}
           <div className="lg:col-span-5 flex flex-col justify-between pointer-events-auto">
             <nav className="flex flex-col gap-1 sm:gap-2">
               {[
-                { label: 'EXHIBITS', to: '/#checkpoints' },
-                { label: 'CONTACT', to: '/#contact' },
-                { label: 'PROTOCOL', to: '/how-it-works' },
-                { label: 'DEMO', to: '/demo' },
+                { label: 'EXHIBITS', action: () => handleNavClick('exhibits') },
+                { label: 'CONTACT', action: () => handleNavClick('contact') },
+                { label: 'PROTOCOL', action: () => handleNavClick('protocol') },
+                { label: 'DEMO', action: () => handleNavClick('demo') },
               ].map((item) => (
-                <Link
+                <button
                   key={item.label}
-                  to={item.to}
-                  className="group flex items-center font-impact text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white tracking-tight leading-none hover:text-highlighter transition-colors duration-150"
+                  type="button"
+                  onClick={item.action}
+                  className="group flex items-center text-left font-impact text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white tracking-tight leading-none hover:text-highlighter transition-colors duration-150 cursor-pointer bg-transparent border-0 p-0"
                 >
                   <span className="opacity-0 -ml-8 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200 text-highlighter mr-2 font-mono text-3xl sm:text-4xl md:text-5xl">
                     ►
                   </span>
                   {item.label}
-                </Link>
+                </button>
               ))}
             </nav>
-            <div className="mt-6 pt-4 border-t border-white/15">
+            <div className="mt-5 pt-3 border-t border-white/15">
               <span className="font-mono text-xs font-bold text-white/50 tracking-widest uppercase block">
                 SITE BY TEAM PAPERTRAIL · SKH020 · SANJIVANI UNIVERSITY
               </span>
@@ -314,25 +326,25 @@ export default function PhysicsFooter() {
           </div>
 
           {/* Middle Column: Quick Links */}
-          <div className="lg:col-span-3 flex flex-col gap-2.5 pt-2 sm:pt-4 pointer-events-auto">
+          <div className="lg:col-span-3 flex flex-col gap-2 pt-2 sm:pt-4 pointer-events-auto">
             <span className="font-mono text-[11px] font-black text-highlighter uppercase tracking-[0.2em] mb-2 block">
               DIRECTORY
             </span>
             {[
-              { label: 'Genesis Vault', href: '/demo' },
-              { label: 'Handoff Scanner', href: '/demo' },
-              { label: 'Audit Ledger', href: '/demo' },
-              { label: 'How It Works', href: '/how-it-works' },
-              { label: 'Crisis Incidents', href: '/#crisis' },
-              { label: 'FAQ & Security', href: '/#faq' },
+              { label: 'Genesis Vault', action: () => handleNavClick('demo') },
+              { label: 'Handoff Scanner', action: () => handleNavClick('demo') },
+              { label: 'Audit Ledger', action: () => handleNavClick('demo') },
+              { label: 'How It Works', action: () => handleNavClick('protocol') },
+              { label: 'Crisis Incidents', action: () => handleNavClick('exhibits') },
             ].map((link) => (
-              <a
+              <button
                 key={link.label}
-                href={link.href}
-                className="text-sm md:text-base font-semibold text-white/70 hover:text-white hover:translate-x-1 transition-all"
+                type="button"
+                onClick={link.action}
+                className="text-left text-sm md:text-base font-semibold text-white/70 hover:text-white hover:translate-x-1 transition-all cursor-pointer bg-transparent border-0 p-0"
               >
                 {link.label}
-              </a>
+              </button>
             ))}
           </div>
 
@@ -406,9 +418,9 @@ export default function PhysicsFooter() {
                       key={i}
                       href={social.href}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       aria-label={social.label}
-                      className="w-9 h-9 rounded-full bg-white/10 hover:bg-highlighter hover:text-ink text-white flex items-center justify-center transition-all border border-white/20 hover:scale-110"
+                      className="w-9 h-9 rounded-full bg-white/10 hover:bg-highlighter hover:text-ink text-white flex items-center justify-center transition-all border border-white/20 hover:scale-110 cursor-pointer"
                     >
                       <Icon />
                     </a>
@@ -420,15 +432,8 @@ export default function PhysicsFooter() {
         </div>
       </div>
 
-      {/* Free roaming balloon notification label */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full pointer-events-none mb-2">
-        <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest">
-          ▼ CRYPTOGRAPHIC HELIUM VAULT · HOVER ANYWHERE TO REPEL · CLICK & DRAG BALLOONS TO THROW
-        </span>
-      </div>
-
       {/* Bottom Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-mono text-white/40 relative z-20 w-full pointer-events-none">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-mono text-white/40 relative z-20 w-full pointer-events-none">
         <span className="pointer-events-auto">PaperTrail · Chain-of-Custody Audit Protocol · SKH020</span>
         <span className="pointer-events-auto">tribhuvansanika@gmail.com · Sanika Tribhuvan</span>
       </div>
