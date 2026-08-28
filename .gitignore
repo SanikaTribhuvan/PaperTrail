@@ -25,6 +25,7 @@ dist-ssr
 
 # Media & local assets
 inspo videos/
+landing vdo*.mp4
 *.jpeg
 *.pdf
 POSTER PARTS/
