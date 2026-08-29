@@ -55,12 +55,12 @@ export default function Timeline({ document: doc, checkpoints, onBack }) {
     <section className="mb-10">
       <SectionHeader number={4} label="IMMUTABLE AUDIT TRAIL" />
 
-      {/* Document header */}
+      {/* Ticket header */}
       <div className="brutal-card-static bg-white p-5 mb-6">
         <div className="flex items-start justify-between">
           <div>
             <div className="font-mono text-xs text-navy/50 uppercase tracking-wider mb-1">
-              Audit Trail for
+              Audit Trail for Civic Ticket
             </div>
             <h3 className="font-black text-xl text-navy">{doc.title}</h3>
             <div className="font-mono text-sm text-navy/60 mt-1">{doc.id}</div>

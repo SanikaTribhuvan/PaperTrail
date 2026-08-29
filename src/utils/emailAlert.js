@@ -104,3 +104,63 @@ export async function sendTamperAlert({
     return { success: false, message: `Email send failed: ${err?.text || err?.message || 'Unknown error'}` };
   }
 }
+
+/**
+ * Send a creation alert email to the document's registered authority.
+ *
+ * @param {Object} params
+ * @param {string} params.authorityEmail  – Recipient email
+ * @param {string} params.documentTitle   – Document name
+ * @param {string} params.documentId      – Document ID
+ * @param {string} params.timestamp       – ISO timestamp of creation
+ *
+ * @returns {{ success: boolean, message: string }}
+ */
+export async function sendCreationAlert({
+  authorityEmail,
+  documentTitle,
+  documentId,
+  timestamp,
+}) {
+  if (!authorityEmail) {
+    return { success: false, message: 'No authority email registered for this document.' };
+  }
+
+  if (!isEmailConfigured()) {
+    console.warn(
+      '[PaperTrail] EmailJS not configured. Creation alert NOT sent. ' +
+      'Update EMAILJS_CONFIG in src/utils/emailAlert.js with your credentials.'
+    );
+    return {
+      success: false,
+      message: 'Email service not configured. Update credentials in emailAlert.js.',
+    };
+  }
+
+  initEmailService();
+
+  const templateParams = {
+    authority_email: authorityEmail,
+    document_title:  documentTitle,
+    document_id:     documentId,
+    timestamp:       new Date(timestamp).toLocaleString('en-IN', {
+      dateStyle: 'full',
+      timeStyle: 'medium',
+    }),
+    to_email:        authorityEmail,
+    alert_type:      'Ticket Created',
+  };
+
+  try {
+    await emailjs.send(
+      EMAILJS_CONFIG.serviceId,
+      EMAILJS_CONFIG.templateId,
+      templateParams,
+    );
+    console.log(`[PaperTrail] Creation alert sent to ${authorityEmail}`);
+    return { success: true, message: `Creation alert dispatched to ${authorityEmail}` };
+  } catch (err) {
+    console.error('[PaperTrail] Failed to send creation alert:', err);
+    return { success: false, message: `Email send failed: ${err?.text || err?.message || 'Unknown error'}` };
+  }
+}

@@ -3,24 +3,24 @@ import SectionHeader from './ui/SectionHeader';
 
 const NEWS_ITEMS = [
   {
-    source: 'Free Press Journal',
-    headline: 'State TET Printing-Press Leak: Missing chain-of-custody during transit causes statewide cancellation.',
-    tag: 'EXAM INTEGRITY',
+    source: 'Municipal Audit Report 2025',
+    headline: 'Flood funds diverted without record: Critical embankment repairs delayed while low-priority road works received emergency funding.',
+    tag: 'FUNDS DIVERTED',
   },
   {
-    source: 'The Hindu / PTI',
-    headline: 'UGC-NET Breach: Ministry orders CBI investigation after unauthorized digital distribution prior to exam shift.',
-    tag: 'NATIONAL SECURITY',
+    source: 'Local Citizen Observatory',
+    headline: 'Ward 4 sanitation delayed by tampered priority queue. Health hazard escalates as records show altered impact metrics.',
+    tag: 'TAMPERED METRICS',
   },
   {
-    source: 'Maharashtra Revenue Dept',
-    headline: 'Talathi 7/12 Record Alteration: Revenue land mutations contested across district civil courts due to missing audit logs.',
-    tag: 'LAND RECORDS',
+    source: 'State Anti-Corruption Bureau',
+    headline: 'Civic tender allocation discrepancies: Investigation ordered after contractor selection failed to align with original risk assessment.',
+    tag: 'TENDER MISMATCH',
   },
   {
-    source: 'All-India Assessment',
-    headline: 'Over ₹1,200 Cr in direct re-examination costs and years of litigation attributed to untraceable physical handoffs.',
-    tag: 'FINANCIAL IMPACT',
+    source: 'Kopargaon Civic Forum',
+    headline: 'Over ₹4.5 Cr in municipal budget misallocated due to subjective and untraceable project prioritization decisions.',
+    tag: 'RESOURCE WASTE',
   },
 ];
 

@@ -2,10 +2,10 @@ import { useState, useCallback } from 'react';
 import { usePaperTrail } from './hooks/usePaperTrail';
 import Header from './components/Header';
 import CrisisStrip from './components/CrisisStrip';
-import DocumentRegistration from './components/DocumentRegistration';
-import CheckpointStation from './components/CheckpointStation';
+import CivicIntake from './components/CivicIntake';
+import AllocationAudit from './components/AllocationAudit';
 import Timeline from './components/Timeline';
-import DocumentLedger from './components/DocumentLedger';
+import TriageQueue from './components/TriageQueue';
 
 export default function App() {
   const {
@@ -19,7 +19,7 @@ export default function App() {
     searchQuery,
     setSearchQuery,
     stats,
-    createDocument,
+    createTicket,
     logCheckpoint,
     getDocumentCheckpoints,
     getDocument,
@@ -63,11 +63,35 @@ export default function App() {
             onResetAll={handleResetAll}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
+            onTriageView={() => setCurrentView('triage')}
           />
           <Timeline
             document={doc}
             checkpoints={docCheckpoints}
             onBack={handleBackFromTimeline}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Triage view
+  if (currentView === 'triage') {
+    return (
+      <div className="min-h-screen bg-cream">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <Header
+            stats={stats}
+            onLoadSample={loadSample}
+            onResetAll={handleResetAll}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onTriageView={() => setCurrentView('triage')}
+          />
+          <TriageQueue
+            documents={documents}
+            checkpoints={checkpoints}
+            onInspect={handleInspect}
           />
         </div>
       </div>
@@ -86,6 +110,7 @@ export default function App() {
           onResetAll={handleResetAll}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          onTriageView={() => setCurrentView('triage')}
         />
 
         {/* Reset confirmation toast */}
@@ -112,15 +137,15 @@ export default function App() {
 
         <CrisisStrip />
 
-        <DocumentRegistration onCreateDocument={createDocument} />
+        <CivicIntake onCreateTicket={createTicket} />
 
-        <CheckpointStation
+        <AllocationAudit
           documents={documents}
           onLogCheckpoint={logCheckpoint}
           getDocumentCheckpoints={getDocumentCheckpoints}
         />
 
-        <DocumentLedger
+        <TriageQueue
           documents={displayedDocuments}
           checkpoints={checkpoints}
           onInspect={handleInspect}

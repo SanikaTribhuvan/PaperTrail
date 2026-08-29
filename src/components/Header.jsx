@@ -1,8 +1,8 @@
-import { Fingerprint, Zap, RotateCcw, FileText, ShieldAlert, Link2, Search, ArrowLeft } from 'lucide-react';
+import { Fingerprint, Zap, RotateCcw, FileText, ShieldAlert, Link2, Search, ArrowLeft, ListOrdered } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import BrutalButton from './ui/BrutalButton';
 
-export default function Header({ stats, onLoadSample, onResetAll, searchQuery, onSearchChange }) {
+export default function Header({ stats, onLoadSample, onResetAll, searchQuery, onSearchChange, onTriageView }) {
   return (
     <header className="mb-8">
       {/* Top Bar */}
@@ -27,7 +27,7 @@ export default function Header({ stats, onLoadSample, onResetAll, searchQuery, o
                   PaperTrail
                 </h1>
                 <p className="text-[10px] font-mono font-bold tracking-[0.15em] text-navy/70 uppercase mt-0.5">
-                  Chain-of-Custody Audit Protocol
+                  Immutable Civic Triage & Allocation Protocol
                 </p>
               </div>
             </div>
@@ -36,6 +36,12 @@ export default function Header({ stats, onLoadSample, onResetAll, searchQuery, o
 
         {/* Action Controls */}
         <div className="flex items-center gap-3">
+          <BrutalButton variant="teal" onClick={onTriageView}>
+            <span className="flex items-center gap-2">
+              <ListOrdered className="w-4 h-4" />
+              Triage Queue
+            </span>
+          </BrutalButton>
           <BrutalButton variant="amber" onClick={onLoadSample}>
             <span className="flex items-center gap-2">
               <Zap className="w-4 h-4" />
@@ -56,7 +62,7 @@ export default function Header({ stats, onLoadSample, onResetAll, searchQuery, o
         <div className="brutal-card-static px-4 py-2.5 flex items-center gap-2 bg-white">
           <FileText className="w-4 h-4 text-navy" />
           <span className="font-mono text-xs font-bold text-navy">
-            {stats.totalDocuments} REGISTERED
+            {stats.totalDocuments} TICKETS LOGGED
           </span>
         </div>
         <div className="brutal-card-static px-4 py-2.5 flex items-center gap-2 bg-white">
@@ -88,7 +94,7 @@ export default function Header({ stats, onLoadSample, onResetAll, searchQuery, o
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search by Document ID, title, custodian, or stage…"
+          placeholder="Search by Ticket ID, title, official, or stage…"
           className="brutal-input w-full pl-12 pr-4 py-3 text-sm bg-white"
         />
       </div>
