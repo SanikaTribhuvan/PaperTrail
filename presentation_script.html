@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PaperTrail Presentation Script</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 18mm 15mm;
+  }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    color: #0B2545;
+    background: #FBF8F1;
+    padding: 20px 30px;
+  }
+
+  h1 {
+    font-size: 22pt;
+    font-weight: 700;
+    text-align: center;
+    background: #0B2545;
+    color: #F1FC47;
+    padding: 14px 20px;
+    border: 3px solid #000;
+    box-shadow: 5px 5px 0 #000;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 9pt;
+    color: #0B2545;
+    opacity: 0.6;
+    margin-bottom: 18px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 8.5pt;
+    font-weight: 600;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    border: 2px solid #000;
+    display: inline-block;
+  }
+  .dot-a { background: #AB0992; }
+  .dot-s { background: #00A896; }
+  .dot-f { background: #3B82F6; }
+  .dot-all { background: #E9B44C; }
+
+  .block {
+    border: 2.5px solid #000;
+    box-shadow: 3px 3px 0 #000;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    background: #fff;
+    page-break-inside: avoid;
+  }
+
+  .block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    border-bottom: 2px solid #0B2545;
+    padding-bottom: 5px;
+  }
+
+  .block-title {
+    font-weight: 700;
+    font-size: 11pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .timer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    font-weight: 700;
+    background: #F1FC47;
+    border: 2px solid #000;
+    padding: 1px 8px;
+  }
+
+  .speaker {
+    font-weight: 700;
+    font-size: 9.5pt;
+    display: inline-block;
+    padding: 1px 6px;
+    margin-right: 4px;
+    border: 1.5px solid #000;
+    color: #fff;
+  }
+  .speaker-a { background: #AB0992; }
+  .speaker-s { background: #00A896; }
+  .speaker-f { background: #3B82F6; }
+  .speaker-all { background: #E9B44C; color: #0B2545; }
+
+  .line {
+    margin-bottom: 7px;
+    padding-left: 4px;
+  }
+
+  .dialogue {
+    font-style: italic;
+  }
+
+  .stage-dir {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    color: #AB0992;
+    display: block;
+    margin: 4px 0;
+    padding: 2px 6px;
+    border-left: 3px solid #AB0992;
+  }
+
+  .note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    color: #555;
+    background: #f5f5f0;
+    border: 1.5px dashed #999;
+    padding: 5px 8px;
+    margin: 6px 0;
+  }
+
+  .page-break { page-break-before: always; }
+
+  .total-bar {
+    text-align: center;
+    background: #0B2545;
+    color: #F1FC47;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    font-weight: 700;
+    padding: 8px;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 #000;
+    margin-bottom: 16px;
+  }
+
+  .tips {
+    border: 2.5px solid #000;
+    box-shadow: 3px 3px 0 #000;
+    padding: 12px 16px;
+    background: #F1FC47;
+    margin-top: 10px;
+  }
+  .tips h3 {
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 4px;
+  }
+  .tips li {
+    font-size: 9pt;
+    margin-bottom: 3px;
+    margin-left: 16px;
+  }
+
+  .qna-box {
+    border: 2.5px solid #000;
+    box-shadow: 3px 3px 0 #000;
+    padding: 12px 16px;
+    background: #fff;
+    margin-top: 10px;
+  }
+  .qna-box h3 {
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 4px;
+  }
+  .qna-item {
+    margin-bottom: 8px;
+    font-size: 9pt;
+  }
+  .qna-item strong {
+    display: block;
+    color: #AB0992;
+    font-size: 8.5pt;
+  }
+</style>
+</head>
+<body>
+
+<h1>PaperTrail &mdash; Presentation Script</h1>
+<div class="subtitle">TRACK: DIGITAL GOVERNANCE &nbsp;|&nbsp; TOTAL TIME: ~5 min 30 sec &nbsp;|&nbsp; PRINT DATE: 28 AUG 2026</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="dot dot-a"></span> ABHIDNYA</div>
+  <div class="legend-item"><span class="dot dot-s"></span> SANIKA</div>
+  <div class="legend-item"><span class="dot dot-f"></span> FRANKLIN</div>
+  <div class="legend-item"><span class="dot dot-all"></span> ALL / STAGE</div>
+</div>
+
+<div class="total-bar">TOTAL RUNTIME: 5 MINUTES 30 SECONDS &mdash; STAY TIGHT, STAY PUNCHY</div>
+
+<!-- BLOCK 1 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-title">1 &mdash; Opening Hook + Introductions</div>
+    <div class="timer">0:00 &rarr; 0:50</div>
+  </div>
+  <div class="stage-dir">All three stand together. Franklin holds handover papers. Laptop ready but screen minimized.</div>
+  <div class="line">
+    <span class="speaker speaker-a">ABHIDNYA</span>
+    <span class="dialogue">"In 2024, the NEET-UG paper reached 13 states before exam day. Nobody could prove who leaked it, because there was no trail. We built that trail."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-a">ABHIDNYA</span>
+    <span class="dialogue">"Good morning. We are Team PaperTrail. I'm Abhidnya H., final year BCS, BPHE Society's Ahmednagar College."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue">"I'm Sanika Tribhuvan, first year MCA, BPHE Society's IMS College."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-f">FRANKLIN</span>
+    <span class="dialogue">"And I'm Franklin, first year, Ahmednagar College."</span>
+  </div>
+  <div class="stage-dir">Franklin begins quietly distributing handover papers to judges while Sanika starts Block 2.</div>
+</div>
+
+<!-- BLOCK 2 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-title">2 &mdash; The Problem + What PaperTrail Is</div>
+    <div class="timer">0:50 &rarr; 1:40</div>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue">"PaperTrail is a cryptographic document integrity system under the Digital Governance track. The problem is simple &mdash; when a sensitive document like an exam paper, a land mutation order, or a government tender moves through ten hands before reaching its destination, and something changes along the way &mdash; today, there is no proof of who did it, or when."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue">"Our solution: the moment a document is created, we take its SHA-256 cryptographic fingerprint. Every time it changes hands, we re-hash it and compare. If even one character has changed &mdash; the chain breaks, and the system flags exactly where and under whose custody the breach happened."</span>
+  </div>
+  <div class="note">TIP: Point at the SEAL / TRACK / ALERT section on the handover paper as you say this. Judges are looking at it right now.</div>
+</div>
+
+<!-- BLOCK 3 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-title">3 &mdash; Website Walkthrough (Franklin)</div>
+    <div class="timer">1:40 &rarr; 2:40</div>
+  </div>
+  <div class="stage-dir">Franklin returns to laptop. Opens website. Scrolls through sections as he narrates. Keep it VISUAL &mdash; scroll slowly, let the design speak.</div>
+  <div class="line">
+    <span class="speaker speaker-f">FRANKLIN</span>
+    <span class="dialogue">"Let me walk you through our platform."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-f">FRANKLIN</span>
+    <span class="dialogue"><strong>[Hero Section]</strong> "This is PaperTrail &mdash; 'No trail, no proof, no accountability &mdash; until now.' The backdrop you're seeing is an animation of the exact problems we're solving."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-f">FRANKLIN</span>
+    <span class="dialogue"><strong>[Origin Section]</strong> "PaperTrail was born from a real exam leak incident. Whether it's a question paper, a tender, or a 7/12 land record &mdash; these documents pass through dozens of hands with zero traceability."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-f">FRANKLIN</span>
+    <span class="dialogue"><strong>[Features/Exhibits]</strong> "We built three core pillars: Genesis Sealing &mdash; where we fingerprint the document. Chain Verification &mdash; where every handoff is checked. And Tamper Alerting &mdash; where the authority gets an instant email if the document is compromised."</span>
+  </div>
+  <div class="note">TIP: Don't read from the screen. Glance at section headings and narrate in your own words. ~60 seconds total for this block.</div>
+</div>
+
+<!-- BLOCK 4 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-title">4 &mdash; Website Walkthrough (Abhidnya)</div>
+    <div class="timer">2:40 &rarr; 3:30</div>
+  </div>
+  <div class="stage-dir">Abhidnya takes over laptop, continues scrolling through remaining sections.</div>
+  <div class="line">
+    <span class="speaker speaker-a">ABHIDNYA</span>
+    <span class="dialogue"><strong>[Protocol Section]</strong> "Here's how the protocol works under the hood. At each checkpoint &mdash; printing, transit, strongroom, distribution &mdash; the document is re-hashed and compared to its previous fingerprint. If the hash matches, the chain holds. If it doesn't &mdash; we know the exact custodian and the exact stage."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-a">ABHIDNYA</span>
+    <span class="dialogue"><strong>[Contact / Tech Stack]</strong> "The system is built with React, SHA-256 hashing, real-time QR scanning for checkpoint identification, and EmailJS for instant tamper alerts. No backend dependency &mdash; this runs entirely in the browser, which means it can be deployed anywhere, even on low-resource government systems."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-a">ABHIDNYA</span>
+    <span class="dialogue">"Now Sanika will show you the system live."</span>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<h1 style="font-size: 16pt; margin-bottom: 14px;">PaperTrail &mdash; Script (Page 2)</h1>
+
+<!-- BLOCK 5 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-title">5 &mdash; Live Demo (Sanika)</div>
+    <div class="timer">3:30 &rarr; 5:00</div>
+  </div>
+  <div class="stage-dir">Sanika navigates to /demo. This is the core &mdash; speak with confidence. You built this.</div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue">"Let me demonstrate with a real scenario. Suppose we have an MPSC exam paper that needs to travel from printing to the examination center."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue"><strong>[Step 1: Register]</strong> "First, the Genesis Officer registers the document. I'll enter the title, the officer's name, the authority's email for alerts, and paste the document content. Watch the live SHA-256 hash computing in real-time as I type."</span>
+  </div>
+  <div class="stage-dir">Click "Seal Document and Generate QR" &mdash; show the QR code and hash to judges.</div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue">"The document is now sealed. It has a unique ID, a QR code, and a cryptographic baseline. This is checkpoint zero."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue"><strong>[Step 2: Verify &mdash; Clean]</strong> "Now the document reaches the strongroom. The officer selects the document, pastes the exact same content, and verifies. Watch &mdash; the hash matches. Green. Chain intact."</span>
+  </div>
+  <div class="stage-dir">Log a checkpoint with SAME content. Show green "VERIFIED" result.</div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue"><strong>[Step 3: Tamper]</strong> "But what if someone changed even a single word? Let me alter just one name in this land record..."</span>
+  </div>
+  <div class="stage-dir">Log a checkpoint with MODIFIED content. Wait for the dramatic red "TAMPERED" strobe.</div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue">"The system immediately flags it. You can see the expected hash versus the received hash &mdash; completely different. And look &mdash; an email alert has been dispatched to the registered authority. The breach, the custodian, the timestamp &mdash; everything is on record."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue"><strong>[Timeline]</strong> "And here's the complete audit trail &mdash; every checkpoint, every custodian, every hash &mdash; in one tamper-proof chain."</span>
+  </div>
+  <div class="note">TIP: Use the pre-loaded sample data if time is short. The land mutation scenario already has a built-in tamper at checkpoint 3.</div>
+</div>
+
+<!-- BLOCK 6 -->
+<div class="block">
+  <div class="block-header">
+    <div class="block-title">6 &mdash; Closing Statement</div>
+    <div class="timer">5:00 &rarr; 5:30</div>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-a">ABHIDNYA</span>
+    <span class="dialogue">"PaperTrail doesn't replace existing systems. It adds a layer of cryptographic accountability that doesn't exist today. Every handoff, sealed. Every breach, exposed. Every authority, alerted."</span>
+  </div>
+  <div class="line">
+    <span class="speaker speaker-s">SANIKA</span>
+    <span class="dialogue">"No trail, no proof, no accountability &mdash; until now. Thank you. We're happy to take any questions."</span>
+  </div>
+  <div class="stage-dir">All three stand together. Smile. Wait for questions.</div>
+</div>
+
+<!-- QNA -->
+<div class="qna-box">
+  <h3>Likely Judge Questions &mdash; Prepared Answers</h3>
+  <div class="qna-item">
+    <strong>Q: "What if someone tampers AND re-registers the document?"</strong>
+    A: "They can't. The genesis hash is locked at creation. Any re-registration creates a new chain with a different ID. The original chain's tamper flag remains permanent." <em>(Sanika answers)</em>
+  </div>
+  <div class="qna-item">
+    <strong>Q: "Why not use blockchain?"</strong>
+    A: "Blockchain is overkill for this use case. We need speed and zero infrastructure. Our SHA-256 hash chain gives the same immutability guarantee without gas fees, nodes, or mining. It runs in a browser on any government computer." <em>(Abhidnya answers)</em>
+  </div>
+  <div class="qna-item">
+    <strong>Q: "What if the content is a scanned PDF, not text?"</strong>
+    A: "The system hashes any content string. In a production version, we'd hash the binary file itself &mdash; the principle is identical. For this demo, we use text to make the hash-change visible." <em>(Sanika answers)</em>
+  </div>
+  <div class="qna-item">
+    <strong>Q: "How does the email alert work?"</strong>
+    A: "We use EmailJS &mdash; a client-side email service. The moment the hash mismatch is detected, an automated email fires to the registered authority with the full breach report: who, when, and the cryptographic proof." <em>(Franklin answers)</em>
+  </div>
+  <div class="qna-item">
+    <strong>Q: "Is this deployed somewhere?"</strong>
+    A: "Yes, it's live on Netlify. The QR code on your handover paper links directly to it. You can try it right now on your phone." <em>(Any member)</em>
+  </div>
+  <div class="qna-item">
+    <strong>Q: "What's the future scope?"</strong>
+    A: "Government API integration, Aadhaar-based custodian verification, mobile app for field officers, and optional blockchain anchoring for high-value documents like land records." <em>(Abhidnya answers)</em>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div class="tips">
+  <h3>Rehearsal Tips</h3>
+  <ul>
+    <li><strong>Pre-load the demo</strong> &mdash; Have the website open and /demo loaded before you start. Clear localStorage so it's fresh.</li>
+    <li><strong>Practice the tamper moment</strong> &mdash; The red strobe is your showstopper. Pause for 1 second after it fires. Let judges absorb it.</li>
+    <li><strong>Eye contact over screen</strong> &mdash; Franklin and Abhidnya: face the judges, gesture at the screen, don't read from it.</li>
+    <li><strong>Handover papers timing</strong> &mdash; Franklin: finish distributing before Sanika finishes Block 2. Don't still be walking around during the website walkthrough.</li>
+    <li><strong>If time is running short</strong> &mdash; Skip the clean verification (Step 2). Go straight from registration to tamper detection. Saves 25 seconds.</li>
+    <li><strong>If asked to wrap up early</strong> &mdash; Jump to Block 6 closing statement immediately. It works as a standalone conclusion.</li>
+  </ul>
+</div>
+
+</body>
+</html>

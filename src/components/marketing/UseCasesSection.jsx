@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MapPin, Gavel, Scale, GraduationCap } from 'lucide-react';
+import { MapPin, Gavel, Scale, GraduationCap, Droplets } from 'lucide-react';
 
 const USE_CASES = [
   {
@@ -40,6 +40,15 @@ const USE_CASES = [
     bg: 'bg-magenta/10',
     borderColor: 'border-magenta',
   },
+  {
+    icon: Droplets,
+    title: 'Utility Distribution Records',
+    description: 'Tamper-evident delivery logs for water tankers and other utility distribution, catching quietly altered or under-reported records.',
+    isLive: false,
+    rotation: '-rotate-[1.5deg]',
+    bg: 'bg-teal/10',
+    borderColor: 'border-teal',
+  },
 ];
 
 export default function UseCasesSection() {
@@ -53,7 +62,7 @@ export default function UseCasesSection() {
           ▼ 04 · WHERE ELSE IT FITS
         </span>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-12">
           {USE_CASES.map((useCase, i) => {
             const Icon = useCase.icon;
             return (

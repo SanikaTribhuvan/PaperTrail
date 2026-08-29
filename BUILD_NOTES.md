@@ -59,3 +59,9 @@ Used `useInView` with `{ once: true }` for all scroll-triggered animations — e
 - `src/components/CrisisStrip.jsx` ✓
 - `src/components/ui/StatusBadge.jsx` ✓
 - `src/components/ui/SectionHeader.jsx` ✓
+
+### §4J — Utility Distribution Records (2026-08-29)
+Utility distribution records added as a Phase 2 use-case card, intentionally
+scoped to log-tampering only, not the full utility-fraud domain, since that's
+a physically different problem (sensors/IoT) this hash-chain system doesn't
+address.
