@@ -2,23 +2,139 @@ import { generateSHA256 } from './crypto';
 import { buildHashPayload, calculatePriorityScore } from './priorityEngine';
 
 /**
- * Kopargaon Municipal Council — Sample Walkthrough Scenarios
- *
- * Scenario 1: CLEAN ALLOCATION (SKH021 - Garbage Collection)
- *   Ward 2 critical sanitation → correctly scored high → budget allocated → verified
- *
- * Scenario 2: CORRUPT PRIORITIZATION (SKH012 - Development Project)
- *   Low-priority road repair → someone inflates Citizen Impact from 3→9
- *   at Budget Committee stage → hash mismatch → TAMPER DETECTED
+ * Generates sample walkthrough data for Part A (Exam Papers & Land Records)
  */
-export async function generateSampleData() {
+export async function generateDocumentSampleData() {
+  // === Scenario 1: Clean MPSC Exam Chain ===
+  const examContent = 'MPSC 2026 GENERAL STUDIES 100 QUESTIONS OFFICIAL';
+  const examHash = await generateSHA256(examContent);
 
-  // ═══ SCENARIO 1: Clean Allocation — Critical Sanitation in Ward 2 ═══
+  const examDoc = {
+    id: 'DOC-MH-2026-0001',
+    title: 'MPSC Combined Preliminary Examination - Set A',
+    category: 'EXAM_PAPER',
+    createdAt: new Date('2026-03-15T09:00:00').toISOString(),
+    initialHash: examHash,
+    currentStatus: 'verified',
+    totalCheckpoints: 3,
+    authorityEmail: 'controller-of-exams@mpsc.gov.in',
+  };
+
+  const examCheckpoints = [
+    {
+      id: 'CHK-10001',
+      documentId: 'DOC-MH-2026-0001',
+      stageName: 'Printing & Packaging',
+      custodianName: 'Dr. R. K. Sharma',
+      custodianRole: 'Chief Printing Superintendent',
+      timestamp: new Date('2026-03-15T09:00:00').toISOString(),
+      contentSnapshot: examContent,
+      computedHash: examHash,
+      previousHash: null,
+      status: 'sealed',
+    },
+    {
+      id: 'CHK-10002',
+      documentId: 'DOC-MH-2026-0001',
+      stageName: 'District Treasury Strongroom',
+      custodianName: 'Shri. A. D. Kulkarni',
+      custodianRole: 'District Treasury Officer',
+      timestamp: new Date('2026-03-16T14:30:00').toISOString(),
+      contentSnapshot: examContent,
+      computedHash: examHash,
+      previousHash: examHash,
+      status: 'verified',
+    },
+    {
+      id: 'CHK-10003',
+      documentId: 'DOC-MH-2026-0001',
+      stageName: 'Center Custody Handover',
+      custodianName: 'Prof. M. S. Jadhav',
+      custodianRole: 'Examination Center Coordinator',
+      timestamp: new Date('2026-03-17T06:45:00').toISOString(),
+      contentSnapshot: examContent,
+      computedHash: examHash,
+      previousHash: examHash,
+      status: 'verified',
+    },
+  ];
+
+  // === Scenario 2: Tampered Land Mutation Chain ===
+  const landContentOriginal = 'Land Parcel 142/A transferred to Suresh Patil with 0 encumbrances.';
+  const landContentTampered = 'Land Parcel 142/A transferred to Rajesh Deshmukh with 0 encumbrances.';
+  const landHashOriginal = await generateSHA256(landContentOriginal);
+  const landHashTampered = await generateSHA256(landContentTampered);
+
+  const landDoc = {
+    id: 'DOC-MH-2026-0002',
+    title: 'Survey No. 142/A — Land Mutation Order',
+    category: 'LAND_MUTATION',
+    createdAt: new Date('2026-04-01T10:00:00').toISOString(),
+    initialHash: landHashOriginal,
+    currentStatus: 'tampered',
+    totalCheckpoints: 3,
+    authorityEmail: 'revenue-officer@ahmednagar.gov.in',
+  };
+
+  const landCheckpoints = [
+    {
+      id: 'CHK-20001',
+      documentId: 'DOC-MH-2026-0002',
+      stageName: 'Collectorate Order',
+      custodianName: 'Smt. P. V. Desai',
+      custodianRole: 'Additional Collector',
+      timestamp: new Date('2026-04-01T10:00:00').toISOString(),
+      contentSnapshot: landContentOriginal,
+      computedHash: landHashOriginal,
+      previousHash: null,
+      status: 'sealed',
+    },
+    {
+      id: 'CHK-20002',
+      documentId: 'DOC-MH-2026-0002',
+      stageName: 'Sub-Registrar Inspection',
+      custodianName: 'Shri. V. N. More',
+      custodianRole: 'Sub-Registrar Grade I',
+      timestamp: new Date('2026-04-03T11:30:00').toISOString(),
+      contentSnapshot: landContentOriginal,
+      computedHash: landHashOriginal,
+      previousHash: landHashOriginal,
+      status: 'verified',
+    },
+    {
+      id: 'CHK-20003',
+      documentId: 'DOC-MH-2026-0002',
+      stageName: 'Talathi Office Mutation',
+      custodianName: 'Shri. K. B. Jagtap',
+      custodianRole: 'Village Talathi',
+      timestamp: new Date('2026-04-05T15:00:00').toISOString(),
+      contentSnapshot: landContentTampered,
+      computedHash: landHashTampered,
+      previousHash: landHashOriginal,
+      status: 'tampered',
+      tamperDetails: {
+        expectedHash: landHashOriginal,
+        receivedHash: landHashTampered,
+        diffSnippet: 'Name changed from "Suresh Patil" to "Rajesh Deshmukh"',
+      },
+    },
+  ];
+
+  return {
+    documents: [examDoc, landDoc],
+    checkpoints: [...examCheckpoints, ...landCheckpoints],
+  };
+}
+
+/**
+ * Generates sample walkthrough data for Part B (Civic Tickets)
+ */
+export async function generateCivicSampleData() {
   const sanitationTicket = {
     title: 'Open Drain Overflow — Shivaji Nagar Colony',
     wardNumber: 2,
     category: 'SANITATION',
-    description: 'Sewage overflow from main drain causing health hazard near primary school. 200+ families affected. Monsoon worsening the situation daily.',
+    description: 'Sewage overflow from main drain causing health hazard near primary school. 200+ families affected.',
     password: 'admin123',
     metrics: { citizenImpact: 9, hazardRisk: 8, estimatedCost: 350000 },
   };
@@ -80,25 +196,25 @@ export async function generateSampleData() {
     },
   ];
 
-  // ═══ SCENARIO 2: Corrupt Prioritization — Road Repair Metric Manipulation ═══
+  // Scenario 2: Corrupt Prioritization
   const roadTicketOriginal = {
     title: 'Pothole Repair — Savedi Link Road',
     wardNumber: 5,
     category: 'INFRASTRUCTURE',
-    description: 'Minor pothole cluster on Savedi-Kopargaon link road near petrol pump. Low traffic area.',
+    description: 'Minor pothole cluster on link road.',
     password: 'admin123',
     metrics: { citizenImpact: 3, hazardRisk: 2, estimatedCost: 2500000 },
   };
   const roadPayloadOriginal = buildHashPayload(roadTicketOriginal);
   const roadHashOriginal = await generateSHA256(roadPayloadOriginal);
 
-  // At checkpoint 2, someone inflates citizenImpact from 3→9 to justify immediate funding
   const roadTicketTampered = {
     ...roadTicketOriginal,
     metrics: { citizenImpact: 9, hazardRisk: 2, estimatedCost: 2500000 },
   };
   const roadPayloadTampered = buildHashPayload(roadTicketTampered);
   const roadHashTampered = await generateSHA256(roadPayloadTampered);
+  const roadPriority = calculatePriorityScore(roadTicketOriginal.metrics);
 
   const roadDoc = {
     id: 'TKT-KPG-2026-0002',
@@ -107,11 +223,11 @@ export async function generateSampleData() {
     category: roadTicketOriginal.category,
     description: roadTicketOriginal.description,
     metrics: { ...roadTicketOriginal.metrics },
-    priorityScore: calculatePriorityScore(roadTicketOriginal.metrics).score,
-    createdAt: new Date('2026-08-24T11:00:00').toISOString(),
+    priorityScore: roadPriority.score,
+    createdAt: new Date('2026-08-25T11:00:00').toISOString(),
     initialHash: roadHashOriginal,
     currentStatus: 'tampered',
-    totalCheckpoints: 2,
+    totalCheckpoints: 3,
     authorityEmail: 'commissioner@kopargaon.gov.in',
   };
 
@@ -120,9 +236,9 @@ export async function generateSampleData() {
       id: 'CHK-20001',
       documentId: 'TKT-KPG-2026-0002',
       stageName: 'Issue Intake & Genesis Sealing',
-      custodianName: 'Shri. R. B. Gaikwad',
-      custodianRole: 'Ward 5 Clerk',
-      timestamp: new Date('2026-08-24T11:00:00').toISOString(),
+      custodianName: 'Shri. S. K. Shinde',
+      custodianRole: 'Ward 5 Civic Officer',
+      timestamp: new Date('2026-08-25T11:00:00').toISOString(),
       contentSnapshot: roadPayloadOriginal,
       computedHash: roadHashOriginal,
       previousHash: null,
@@ -132,8 +248,8 @@ export async function generateSampleData() {
       id: 'CHK-20002',
       documentId: 'TKT-KPG-2026-0002',
       stageName: 'Budget Committee Review',
-      custodianName: 'Shri. V. N. More',
-      custodianRole: 'Budget Committee Member',
+      custodianName: 'Shri. P. R. Thorat',
+      custodianRole: 'Standing Committee Member',
       timestamp: new Date('2026-08-26T16:00:00').toISOString(),
       contentSnapshot: roadPayloadTampered,
       computedHash: roadHashTampered,
@@ -142,102 +258,35 @@ export async function generateSampleData() {
       tamperDetails: {
         expectedHash: roadHashOriginal,
         receivedHash: roadHashTampered,
-        diffSnippet: 'Citizen Impact altered from 3 to 9 to justify immediate budget allocation',
+        diffSnippet: 'Citizen Impact inflated from 3/10 to 9/10 (unauthorized score inflation)',
       },
     },
-  ];
-
-  // ═══ SCENARIO 3: Water Supply Issue — In Queue ═══
-  const waterTicket = {
-    title: 'Ward 7 Water Tanker Schedule Disruption',
-    wardNumber: 7,
-    category: 'WATER_SUPPLY',
-    description: 'Regular tanker supply disrupted for 3 days. Colony of 400 families without water.',
-    password: 'admin123',
-    metrics: { citizenImpact: 8, hazardRisk: 6, estimatedCost: 75000 },
-  };
-  const waterPayload = buildHashPayload(waterTicket);
-  const waterHash = await generateSHA256(waterPayload);
-
-  const waterDoc = {
-    id: 'TKT-KPG-2026-0003',
-    title: waterTicket.title,
-    wardNumber: waterTicket.wardNumber,
-    category: waterTicket.category,
-    description: waterTicket.description,
-    metrics: { ...waterTicket.metrics },
-    priorityScore: calculatePriorityScore(waterTicket.metrics).score,
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    initialHash: waterHash,
-    currentStatus: 'sealed',
-    totalCheckpoints: 1,
-    authorityEmail: 'water-dept@kopargaon.gov.in',
-  };
-
-  const waterCheckpoints = [
     {
-      id: 'CHK-30001',
-      documentId: 'TKT-KPG-2026-0003',
-      stageName: 'Issue Intake & Genesis Sealing',
-      custodianName: 'Shri. P. K. Sonawane',
-      custodianRole: 'Water Supply Officer',
-      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-      contentSnapshot: waterPayload,
-      computedHash: waterHash,
-      previousHash: null,
-      status: 'sealed',
-    },
-  ];
-
-  // ═══ SCENARIO 4: Disaster Alert — Flood Risk ═══
-  const floodTicket = {
-    title: 'Godavari Embankment Erosion — Ward 1',
-    wardNumber: 1,
-    category: 'DISASTER',
-    description: 'Embankment erosion near Godavari bridge detected. 2000+ residents in flood zone.',
-    password: 'admin123',
-    metrics: { citizenImpact: 10, hazardRisk: 10, estimatedCost: 4500000 },
-  };
-  const floodPayload = buildHashPayload(floodTicket);
-  const floodHash = await generateSHA256(floodPayload);
-
-  const floodDoc = {
-    id: 'TKT-KPG-2026-0004',
-    title: floodTicket.title,
-    wardNumber: floodTicket.wardNumber,
-    category: floodTicket.category,
-    description: floodTicket.description,
-    metrics: { ...floodTicket.metrics },
-    priorityScore: calculatePriorityScore(floodTicket.metrics).score,
-    createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    initialHash: floodHash,
-    currentStatus: 'sealed',
-    totalCheckpoints: 1,
-    authorityEmail: 'disaster-mgmt@kopargaon.gov.in',
-  };
-
-  const floodCheckpoints = [
-    {
-      id: 'CHK-40001',
-      documentId: 'TKT-KPG-2026-0004',
-      stageName: 'Emergency Intake',
-      custodianName: 'Shri. S. D. Pawar',
-      custodianRole: 'Disaster Management Cell',
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-      contentSnapshot: floodPayload,
-      computedHash: floodHash,
-      previousHash: null,
-      status: 'sealed',
+      id: 'CHK-20003',
+      documentId: 'TKT-KPG-2026-0002',
+      stageName: 'Tender Publication',
+      custodianName: 'Shri. V. K. Borde',
+      custodianRole: 'Tender Officer',
+      timestamp: new Date('2026-08-27T11:30:00').toISOString(),
+      contentSnapshot: roadPayloadTampered,
+      computedHash: roadHashTampered,
+      previousHash: roadHashTampered,
+      status: 'tampered',
     },
   ];
 
   return {
-    documents: [sanitationDoc, roadDoc, waterDoc, floodDoc],
-    checkpoints: [
-      ...sanitationCheckpoints,
-      ...roadCheckpoints,
-      ...waterCheckpoints,
-      ...floodCheckpoints,
-    ],
+    documents: [sanitationDoc, roadDoc],
+    checkpoints: [...sanitationCheckpoints, ...roadCheckpoints],
   };
+}
+
+/**
+ * Universal loader: defaults to document mode or accepts mode
+ */
+export async function generateSampleData(mode = 'document') {
+  if (mode === 'civic') {
+    return generateCivicSampleData();
+  }
+  return generateDocumentSampleData();
 }

@@ -12,8 +12,10 @@ export function usePaperTrail() {
   checkpointsRef.current = checkpoints;
   const documentsRef = useRef(documents);
   documentsRef.current = documents;
+
   const [activeDocId, setActiveDocId] = useState(null);
-  const [currentView, setCurrentView] = useState('dashboard');
+  const [currentView, setCurrentView] = useState('dashboard'); // dashboard | timeline | triage
+  const [activeMode, setActiveMode] = useState('document'); // 'document' (Part A: Exam/Land) | 'civic' (Part B: Civic Triage)
   const [lastResult, setLastResult] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -22,11 +24,58 @@ export function usePaperTrail() {
   useEffect(() => { saveCheckpoints(checkpoints); }, [checkpoints]);
 
   /**
-   * Create a new CivicTicket with its genesis checkpoint.
-   * Hash payload = stringified metrics + priority score.
+   * Part A: Create Document (Exam Paper, Land Mutation, Government Tender)
+   */
+  const createDocument = useCallback(async (title, category, content, custodianName, custodianRole, authorityEmail) => {
+    const hash = await generateSHA256(content);
+    const docId = generateDocId();
+    const now = new Date().toISOString();
+
+    const doc = {
+      id: docId,
+      title,
+      category: category || 'EXAM_PAPER',
+      createdAt: now,
+      initialHash: hash,
+      currentStatus: 'sealed',
+      totalCheckpoints: 1,
+      authorityEmail: authorityEmail || '',
+    };
+
+    const checkpoint = {
+      id: generateCheckpointId(),
+      documentId: docId,
+      stageName: 'Genesis Sealing',
+      custodianName: custodianName || 'Registrar',
+      custodianRole: custodianRole || 'Genesis Custody Officer',
+      timestamp: now,
+      contentSnapshot: content,
+      computedHash: hash,
+      previousHash: null,
+      status: 'sealed',
+    };
+
+    setDocuments(prev => [...prev, doc]);
+    setCheckpoints(prev => [...prev, checkpoint]);
+    setLastResult({ type: 'created', document: doc, checkpoint });
+
+    if (doc.authorityEmail) {
+      sendCreationAlert({
+        authorityEmail: doc.authorityEmail,
+        documentTitle: doc.title,
+        documentId: doc.id,
+        timestamp: now,
+      });
+    }
+
+    return { document: doc, checkpoint };
+  }, []);
+
+  /**
+   * Part B: Create Civic Ticket (Ward Resource Allocation)
    */
   const createTicket = useCallback(async (ticketData) => {
-    const { title, wardNumber, category, description, metrics, authorityEmail } = ticketData;
+    const { title, wardNumber, category, description, metrics, authorityEmail, password } = ticketData;
     const priority = calculatePriorityScore(metrics);
     const hashPayload = buildHashPayload(ticketData);
     const hash = await generateSHA256(hashPayload);
@@ -78,9 +127,7 @@ export function usePaperTrail() {
   }, []);
 
   /**
-   * Log a new checkpoint for an existing ticket.
-   * Used by municipal committees to allocate budgets / update statuses.
-   * Re-hashes the ticket's current metrics+score — if altered, chain breaks.
+   * Universal Checkpoint Logger (works for both Part A and Part B)
    */
   const logCheckpoint = useCallback(async (documentId, stageName, custodianName, custodianRole, content) => {
     const hash = await generateSHA256(content);
@@ -106,7 +153,7 @@ export function usePaperTrail() {
       id: generateCheckpointId(),
       documentId,
       stageName,
-      custodianName: custodianName || 'Unspecified',
+      custodianName: custodianName || 'Unspecified Custodian',
       custodianRole: custodianRole || '',
       timestamp: new Date().toISOString(),
       contentSnapshot: content,
@@ -121,19 +168,16 @@ export function usePaperTrail() {
         receivedHash: hash,
       };
 
+      // Dispatch EmailJS alert if document has authority email
       const doc = documentsRef.current.find(d => d.id === documentId);
-      if (doc?.authorityEmail) {
+      if (doc && doc.authorityEmail) {
         sendTamperAlert({
           authorityEmail: doc.authorityEmail,
           documentTitle: doc.title,
           documentId: doc.id,
-          custodianName: custodianName || 'Unspecified',
-          stageName,
-          expectedHash: previousHash,
-          receivedHash: hash,
+          tamperedStage: stageName,
+          responsibleOfficer: custodianName || 'Unknown Custodian',
           timestamp: checkpoint.timestamp,
-        }).then(result => {
-          checkpoint.emailAlert = result;
         });
       }
     }
@@ -175,29 +219,30 @@ export function usePaperTrail() {
     setCurrentView('dashboard');
   }, []);
 
-  const loadSample = useCallback(async () => {
-    const sample = await generateSampleData();
+  const loadSample = useCallback(async (forcedMode) => {
+    const targetMode = forcedMode || activeMode;
+    const sample = await generateSampleData(targetMode);
     setDocuments(sample.documents);
     setCheckpoints(sample.checkpoints);
     setLastResult(null);
-  }, []);
+  }, [activeMode]);
 
-  // Search
   const filteredDocuments = documents.filter(doc => {
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
-    const docCPs = checkpoints.filter(c => c.documentId === doc.id);
+    const docCheckpoints = checkpoints.filter(c => c.documentId === doc.id);
     return (
       doc.id.toLowerCase().includes(q) ||
       doc.title.toLowerCase().includes(q) ||
       doc.currentStatus.toLowerCase().includes(q) ||
-      (doc.category || '').toLowerCase().includes(q) ||
-      String(doc.wardNumber).includes(q) ||
-      docCPs.some(c => c.custodianName.toLowerCase().includes(q) || c.stageName.toLowerCase().includes(q))
+      (doc.category && doc.category.toLowerCase().includes(q)) ||
+      docCheckpoints.some(c =>
+        c.custodianName.toLowerCase().includes(q) ||
+        c.stageName.toLowerCase().includes(q)
+      )
     );
   });
 
-  // Stats
   const stats = {
     totalDocuments: documents.length,
     activeChains: documents.filter(d => d.currentStatus !== 'tampered').length,
@@ -213,11 +258,14 @@ export function usePaperTrail() {
     setActiveDocId,
     currentView,
     setCurrentView,
+    activeMode,
+    setActiveMode,
     lastResult,
     setLastResult,
     searchQuery,
     setSearchQuery,
     stats,
+    createDocument,
     createTicket,
     logCheckpoint,
     getDocumentCheckpoints,
