@@ -10,6 +10,7 @@ import AllocationAudit from './components/AllocationAudit';
 import Timeline from './components/Timeline';
 import TriageQueue from './components/TriageQueue';
 import CitizenSnapReport from './components/CitizenSnapReport';
+import LiveChallengeCenter from './components/LiveChallengeCenter';
 import { FileText, Building2, Camera, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
@@ -62,6 +63,11 @@ export default function App() {
     if (newMode === 'document' || newMode === 'civic') {
       loadSample(newMode);
     }
+  };
+
+  // Data Wipe Demo handler: clears storage and immediately re-hydrates from sample/memory
+  const handleDataWipeDemo = async () => {
+    await loadSample(activeMode === 'civic' ? 'civic' : 'document');
   };
 
   // Timeline view
@@ -129,7 +135,7 @@ export default function App() {
         />
 
         {/* Triple Mode Switcher Banner */}
-        <div className="mb-6 bg-white brutal-border p-3 flex flex-wrap items-center justify-between gap-3 shadow-[4px_4px_0_#0B2545]">
+        <div className="mb-4 bg-white brutal-border p-3 flex flex-wrap items-center justify-between gap-3 shadow-[4px_4px_0_#0B2545]">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-yellow brutal-border flex items-center justify-center font-bold text-navy text-xs">
               SKH
@@ -192,6 +198,14 @@ export default function App() {
           </div>
         </div>
 
+        {/* 🚨 LIVE HACKATHON CHALLENGE DEFENSE CENTER (FOR 1-CLICK DEMO TO JUDGES) */}
+        <LiveChallengeCenter
+          onTriggerDataWipeDemo={handleDataWipeDemo}
+          onNavigateToAiPhoto={() => handleSwitchMode('citizen_snap')}
+          documents={documents}
+          checkpoints={checkpoints}
+        />
+
         {/* Reset confirmation toast */}
         {showResetConfirm && (
           <div className="fixed top-4 right-4 z-50 brutal-card-static bg-tampered text-white p-4 max-w-xs">
@@ -221,10 +235,7 @@ export default function App() {
         {/* Dynamic Mode Rendering */}
         {activeMode === 'citizen_snap' ? (
           <>
-            {/* Citizen AI Photo Intake & Real-vs-Fake Verification */}
             <CitizenSnapReport onCreateTicket={createTicket} />
-
-            {/* Live Triage Queue showing incoming citizen verified reports */}
             <TriageQueue
               documents={displayedDocuments}
               checkpoints={checkpoints}
@@ -233,17 +244,12 @@ export default function App() {
           </>
         ) : activeMode === 'document' ? (
           <>
-            {/* Part A: Genesis Vault with Exam Paper / Land Mutation / Tenders */}
             <DocumentRegistration onCreateDocument={createDocument} />
-
-            {/* Part A: Checkpoint Station */}
             <CheckpointStation
               documents={documents}
               onLogCheckpoint={logCheckpoint}
               getDocumentCheckpoints={getDocumentCheckpoints}
             />
-
-            {/* Part A: Document Ledger */}
             <DocumentLedger
               documents={displayedDocuments}
               checkpoints={checkpoints}
@@ -252,17 +258,12 @@ export default function App() {
           </>
         ) : (
           <>
-            {/* Part B: Civic Issue Intake with Ward numbers & Priority Engine */}
             <CivicIntake onCreateTicket={createTicket} />
-
-            {/* Part B: Allocation Audit & Priority Verifier */}
             <AllocationAudit
               documents={documents}
               onLogCheckpoint={logCheckpoint}
               getDocumentCheckpoints={getDocumentCheckpoints}
             />
-
-            {/* Part B: Triage Queue */}
             <TriageQueue
               documents={displayedDocuments}
               checkpoints={checkpoints}
