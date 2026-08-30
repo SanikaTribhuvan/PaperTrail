@@ -9,7 +9,8 @@ import CivicIntake from './components/CivicIntake';
 import AllocationAudit from './components/AllocationAudit';
 import Timeline from './components/Timeline';
 import TriageQueue from './components/TriageQueue';
-import { FileText, Building2, Sparkles, CheckCircle2 } from 'lucide-react';
+import CitizenSnapReport from './components/CitizenSnapReport';
+import { FileText, Building2, Camera, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
   const {
@@ -58,7 +59,9 @@ export default function App() {
 
   const handleSwitchMode = (newMode) => {
     setActiveMode(newMode);
-    loadSample(newMode);
+    if (newMode === 'document' || newMode === 'civic') {
+      loadSample(newMode);
+    }
   };
 
   // Timeline view
@@ -71,7 +74,7 @@ export default function App() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Header
             stats={stats}
-            onLoadSample={() => loadSample(activeMode)}
+            onLoadSample={() => loadSample(activeMode === 'civic' ? 'civic' : 'document')}
             onResetAll={handleResetAll}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
@@ -94,7 +97,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Header
             stats={stats}
-            onLoadSample={() => loadSample(activeMode)}
+            onLoadSample={() => loadSample(activeMode === 'civic' ? 'civic' : 'document')}
             onResetAll={handleResetAll}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
@@ -118,14 +121,14 @@ export default function App() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Header
           stats={stats}
-          onLoadSample={() => loadSample(activeMode)}
+          onLoadSample={() => loadSample(activeMode === 'civic' ? 'civic' : 'document')}
           onResetAll={handleResetAll}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onTriageView={() => setCurrentView('triage')}
         />
 
-        {/* Mode Switcher Banner */}
+        {/* Triple Mode Switcher Banner */}
         <div className="mb-6 bg-white brutal-border p-3 flex flex-wrap items-center justify-between gap-3 shadow-[4px_4px_0_#0B2545]">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-yellow brutal-border flex items-center justify-center font-bold text-navy text-xs">
@@ -133,21 +136,37 @@ export default function App() {
             </div>
             <div>
               <div className="text-xs font-bold text-navy uppercase tracking-wider">
-                Hackathon Presentation Mode
+                Hackathon Presentation & Live Features
               </div>
               <div className="text-[11px] text-navy/60">
-                Switch between Part A (Original Project) and Part B (Challenge Mode)
+                Switch between Public AI Photo Intake, Part A Custody, and Part B Triage
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* 1. Citizen AI Photo Snap */}
+            <button
+              type="button"
+              onClick={() => handleSwitchMode('citizen_snap')}
+              className={`brutal-btn px-3.5 py-2 text-xs font-bold transition-all flex items-center gap-1.5 ${
+                activeMode === 'citizen_snap'
+                  ? 'bg-yellow text-navy border-navy! shadow-[2px_2px_0_#000]'
+                  : 'bg-cream text-navy hover:bg-white'
+              }`}
+            >
+              <Camera className="w-4 h-4 text-navy" />
+              <span>📸 Citizen AI Photo Snap</span>
+              {activeMode === 'citizen_snap' && <CheckCircle2 className="w-3.5 h-3.5 text-navy" />}
+            </button>
+
+            {/* 2. Part A: Document Custody */}
             <button
               type="button"
               onClick={() => handleSwitchMode('document')}
-              className={`brutal-btn px-4 py-2 text-xs font-bold transition-all flex items-center gap-2 ${
+              className={`brutal-btn px-3.5 py-2 text-xs font-bold transition-all flex items-center gap-1.5 ${
                 activeMode === 'document'
-                  ? 'bg-navy text-yellow border-navy!'
+                  ? 'bg-navy text-yellow border-navy! shadow-[2px_2px_0_#000]'
                   : 'bg-cream text-navy hover:bg-white'
               }`}
             >
@@ -156,17 +175,18 @@ export default function App() {
               {activeMode === 'document' && <CheckCircle2 className="w-3.5 h-3.5 text-yellow" />}
             </button>
 
+            {/* 3. Part B: Civic Triage */}
             <button
               type="button"
               onClick={() => handleSwitchMode('civic')}
-              className={`brutal-btn px-4 py-2 text-xs font-bold transition-all flex items-center gap-2 ${
+              className={`brutal-btn px-3.5 py-2 text-xs font-bold transition-all flex items-center gap-1.5 ${
                 activeMode === 'civic'
                   ? 'bg-navy text-yellow border-navy!'
                   : 'bg-cream text-navy hover:bg-white'
               }`}
             >
               <Building2 className="w-4 h-4" />
-              <span>Part B: Civic Triage Challenge</span>
+              <span>Part B: Civic Triage & Audit</span>
               {activeMode === 'civic' && <CheckCircle2 className="w-3.5 h-3.5 text-yellow" />}
             </button>
           </div>
@@ -199,7 +219,19 @@ export default function App() {
         <CrisisStrip />
 
         {/* Dynamic Mode Rendering */}
-        {activeMode === 'document' ? (
+        {activeMode === 'citizen_snap' ? (
+          <>
+            {/* Citizen AI Photo Intake & Real-vs-Fake Verification */}
+            <CitizenSnapReport onCreateTicket={createTicket} />
+
+            {/* Live Triage Queue showing incoming citizen verified reports */}
+            <TriageQueue
+              documents={displayedDocuments}
+              checkpoints={checkpoints}
+              onInspect={handleInspect}
+            />
+          </>
+        ) : activeMode === 'document' ? (
           <>
             {/* Part A: Genesis Vault with Exam Paper / Land Mutation / Tenders */}
             <DocumentRegistration onCreateDocument={createDocument} />
