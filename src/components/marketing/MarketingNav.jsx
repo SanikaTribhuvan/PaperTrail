@@ -71,44 +71,61 @@ export default function MarketingNav() {
 
   return (
     <>
+      {/* 
+        CapCut / Premiere Invert Overlay Header:
+        Header sits transparently on top of page content.
+        Text and controls use mix-blend-mode: difference with pure white text (#FFFFFF),
+        causing every pixel to dynamically invert based on whatever background is underneath:
+        White on Black (Hero Video) -> White
+        White on White/Cream (Sections) -> Black / Inverted Dark
+        White on Yellow/Highlighter -> Inverted Deep Indigo
+      */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-          scrolled
-            ? 'bg-cream border-b-[3px] border-black'
-            : 'bg-transparent'
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 bg-transparent pointer-events-none transition-all duration-200"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Brand Mark */}
-            <Link to="/" className="flex items-center gap-3 focus-brutal" onClick={() => window.scrollTo(0, 0)}>
-              <div className="tilted-badge bg-highlighter px-3 py-1.5 md:px-4 md:py-2">
+            {/* Brand Mark with Dynamic Difference Invert */}
+            <Link
+              to="/"
+              className="flex items-center gap-3 pointer-events-auto focus-brutal"
+              style={{ mixBlendMode: 'difference' }}
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              <div className="border-2 border-white px-3 py-1.5 md:px-4 md:py-2 bg-transparent shadow-[3px_3px_0px_#FFFFFF]">
                 <div className="flex items-center gap-2">
-                  <img src="/LOGO.png" alt="PaperTrail" className="w-7 h-7 md:w-8 md:h-8 object-contain" />
+                  <img
+                    src="/LOGO.png"
+                    alt="PaperTrail"
+                    className="w-7 h-7 md:w-8 md:h-8 object-contain brightness-200 contrast-200"
+                  />
                   <div>
-                    <div className="text-sm md:text-base font-black tracking-tight text-ink leading-none">
+                    <div className="text-sm md:text-base font-black tracking-tight text-white leading-none uppercase">
                       PaperTrail
                     </div>
-                    <div className="text-[7px] md:text-[8px] font-mono font-bold tracking-[0.1em] text-ink/60 uppercase">
-                      Chain-of-Custody Audit Protocol
+                    <div className="text-[7px] md:text-[8px] font-mono font-bold tracking-[0.12em] text-white/90 uppercase">
+                      Chain-of-Custody Protocol
                     </div>
                   </div>
                 </div>
               </div>
             </Link>
 
-            {/* Desktop Nav Links */}
-            <div className="hidden lg:flex items-center gap-1">
+            {/* Desktop Nav Links with Dynamic Difference Invert */}
+            <div
+              className="hidden lg:flex items-center gap-1 pointer-events-auto"
+              style={{ mixBlendMode: 'difference' }}
+            >
               {NAV_LINKS.map(link => (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
                   className={`
-                    focus-brutal px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all
+                    px-3 py-2 text-xs font-black uppercase tracking-wider transition-all
                     ${isActive(link.href)
-                      ? 'text-ink border-b-[3px] border-highlighter'
-                      : 'text-ink/60 hover:text-ink hover:bg-highlighter/30'
+                      ? 'text-white border-b-2 border-white font-extrabold'
+                      : 'text-white/80 hover:text-white hover:underline'
                     }
                   `}
                 >
@@ -117,20 +134,23 @@ export default function MarketingNav() {
               ))}
             </div>
 
-            {/* Desktop CTA + Mobile Hamburger */}
-            <div className="flex items-center gap-3">
+            {/* Desktop CTA + Mobile Hamburger with Dynamic Difference Invert */}
+            <div
+              className="flex items-center gap-3 pointer-events-auto"
+              style={{ mixBlendMode: 'difference' }}
+            >
               <Link
                 to="/demo"
-                className="hidden md:inline-flex brutal-btn bg-magenta text-white px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg focus-brutal"
+                className="hidden md:inline-flex border-2 border-white bg-transparent text-white px-4 py-2 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0px_#FFFFFF] hover:shadow-[1px_1px_0px_#FFFFFF] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
               >
                 TRY IT YOURSELF →
               </Link>
               <button
                 onClick={() => setDrawerOpen(true)}
-                className="lg:hidden brutal-btn bg-white p-2 focus-brutal"
+                className="lg:hidden border-2 border-white bg-transparent text-white p-2 shadow-[2px_2px_0px_#FFFFFF]"
                 aria-label="Open navigation menu"
               >
-                <Menu className="w-5 h-5" />
+                <Menu className="w-5 h-5 text-white" />
               </button>
             </div>
           </div>
@@ -141,12 +161,12 @@ export default function MarketingNav() {
       {drawerOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden">
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
+          <div className="absolute inset-0 bg-black/50" onClick={() => setDrawerOpen(false)} />
 
           {/* Drawer */}
           <div className="absolute top-0 right-0 bottom-0 w-72 bg-cream border-l-[3px] border-black flex flex-col">
             <div className="flex items-center justify-between p-4 border-b-[3px] border-black">
-              <span className="font-display text-sm tracking-tight">MENU</span>
+              <span className="font-display text-sm font-black tracking-tight text-navy">MENU</span>
               <button
                 onClick={() => setDrawerOpen(false)}
                 className="brutal-btn bg-white p-1.5 focus-brutal"
